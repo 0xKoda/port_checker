@@ -4,6 +4,7 @@ use std::io::{Write, BufRead, BufReader};
 use std::process::Command;
 use std::str;
 
+
 /// Ensures the existence of the file containing programs of questionable intent.
 ///
 /// If the file doesn't exist, it'll be created with a touch of finesse.
