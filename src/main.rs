@@ -4,7 +4,6 @@ use std::io::{Write, BufRead, BufReader};
 use std::process::Command;
 use std::str;
 
-
 /// Ensures the existence of the file containing programs of questionable intent.
 ///
 /// If the file doesn't exist, it'll be created with a touch of finesse.
@@ -45,6 +44,35 @@ fn remove_suspicious_program(program_name: &str) {
     fs::write("suspicious_programs.txt", updated_programs.join("\n")).expect("Failed to write updated suspicious programs file");
 }
 
+/// Kills a program by its name.
+///
+/// # Parameters
+///
+/// * `program_name` - The name of the program to be killed.
+fn kill_program_by_name(program_name: &str) {
+    let output = Command::new("pgrep")
+        .arg(program_name)
+        .output()
+        .expect("Failed to execute pgrep command");
+
+    let output_str = str::from_utf8(&output.stdout).expect("Failed toconvert output to string");
+
+    if output_str.is_empty() {
+        println!("No program found with name {}", program_name);
+        return;
+    }
+
+    for pid_str in output_str.lines() {
+        let pid = pid_str.parse::<u32>().expect("Failed to parse PID");
+        Command::new("kill")
+            .arg("-9")
+            .arg(pid.to_string())
+            .spawn()
+            .expect("Failed to kill program");
+        println!("Killed program with name {} and PID {}", program_name, pid);
+    }
+}
+
 /// The main function, where the curtain rises and the show begins.
 ///
 /// It ensures the file of questionable programs exists, processes command-line arguments, and
@@ -56,12 +84,15 @@ fn main() {
 
     if args.len() > 2 {
         let action = &args[1];
-        let program_name = &args[2];
+        let program_name_or_port = &args[2];
 
         match action.as_str() {
-            "add" => add_suspicious_program(program_name),
-            "remove" => remove_suspicious_program(program_name),
-            _ => println!("Invalid action. Use 'add' or 'remove'."),
+            "add" => add_suspicious_program(program_name_or_port),
+            "remove" => remove_suspicious_program(program_name_or_port),
+            "kill" => {
+                kill_program_by_name(program_name_or_port);
+            }
+            _ => println!("Invalid action. Use 'add', 'remove', or 'kill'."),
         }
     }
 
