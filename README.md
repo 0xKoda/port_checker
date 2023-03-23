@@ -1,6 +1,6 @@
-# Suspicious Programs Detector
+# Identify Telemtry on your Mac
 
-A Rust-based command-line tool that detects suspicious programs running on your system that are trying to communicate through ports on your pc.
+Port_Checker is Rust-based command-line tool that detects suspicious programs running on your system that are communicating through network ports on your mac, track program persistance, and kill suspicious programs.
 
 Returns a list of running programs, the port, protocol etc. and allows you to identify and add suspicious programs to a list, so that you can easily identify suspecious network activity on your mac.
 
@@ -40,3 +40,9 @@ To remove a program from the list of suspicious programs, use the following comm
 cargo run remove program_name
 ```
 Replace `program_name` with the actual name of the program you want to remove from the list.
+
+### Kill a suspicious program
+```sh
+cargo run kill program_name
+```
+Replace `program_name` with the actual name of the program you want to kill.
