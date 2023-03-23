@@ -22,7 +22,7 @@ cargo build --release
 
 Run the program with the following command:
 ```sh
-cargo run add program_name
+cargo run 
 ```
 
 ### Adding a suspicious program
